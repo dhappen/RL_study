@@ -6,8 +6,8 @@
 
 $P[S_{t+1}| S_t] = P[S_{t+1} | S_1, ..., S_t]$
 
-### 1) Markov reward process
-$<S,P,R,\gamma>$ 로 표현할 수 있다.  
+### 1) Markov reward process  
+$(S,P,R,\gamma)$의 tuple로 표현할 수 있다.  
 * $P[S_{t+1}| S_t] = P[S_{t+1} | S_1, ..., S_t]$  
 * $R_s = E[R_{t+1}|S_t=s]$ => 특정 state s 에서받을 수 있는 reward의 기댓값 확률 $p(r|s)$를 따른다.  
 * Return $G_t = R_{t+1}+ \gamma R_{t+2}+... = \displaystyle\sum_{k=0}^{\infty}{\gamma ^kR_{t+k+1}}$ : time step t로부터 받을 수 있는 총 discounted reward sum
@@ -20,7 +20,7 @@ $<S,P,R,\gamma>$ 로 표현할 수 있다.
   $\\=E[R_{t+1}]+\gamma E[v(S_{t+1})|S_t=s]
   \\=R_s+\gamma \displaystyle\sum_{s'\in S}{p(s'|s)v(s')}$
 ### 2) Markov decision process
-$<S,A,P,R,\gamma >$ 로 표현할 수 있다.
+$(S,A,P,R,\gamma )$의 tuple로 표현할 수 있다.
 * State transition probability : $P_{ss'}^a=p(s'|s,a)$
 * Action is following policy $\pi (a|s)$
 * $R_s^a=E[R_{t+1}|S,A] = \displaystyle\sum_{a}{\pi(a|s)} \displaystyle\sum_{r}{p(r|s,a)r}=\displaystyle\sum_{a} \displaystyle\sum_{r}{p(r,a|s)r}=\displaystyle\sum_{r}{rp(r|s)}$
