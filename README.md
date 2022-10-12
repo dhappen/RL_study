@@ -45,10 +45,10 @@ Dynamic programming : 복잡한 문제를 푸는 최적화 기법으로 다음 �
   - Bellman equation은 recursive decomposition 특성을 가짐
   - Value function은 저장되어 solution으로 재사용될 수 있음
   - For prediction(evaluation) : given policy $\pi$에 의해
-    - input : MDP tuple ($S, A, P, R, \gamma$)
+    - input : MDP tuple ( $S, A, P, R, \gamma$ )  
     - output : value function $v_{\pi}$ or action value function $q_{\pi}(s,a)$
   - For control(최적해):
-    - input : MDP tuple ($S, A, P, R, \gamma$)
+    - input : MDP tuple ( $S, A, P, R, \gamma$ )  
     - output : optimal value function $v_{\pi}$ or optimal policy $\pi$
 ### 1) Iterative policy evaluation
 Problem : given policy $\pi$ 로 예측되는 $v_{\pi}$를 만드는 것  
@@ -57,16 +57,16 @@ Problem : given policy $\pi$ 로 예측되는 $v_{\pi}$를 만드는 것
 - Iteration을 통해 given policy $\pi$에 수렴하는 $v_{\pi}$를 구할 수 있다.
 ### 2) Policy iteration
 Policy evaluation과 greedy action을 통해 policy를 improve하는 과정을 반복하면  
-optimal policy $\pi^*$와 optimal value function $v^*$를 구할 수 있다.
+optimal policy $\pi^{*}$와 optimal value function $v^{*}$를 구할 수 있다.
 - policy evaluation : 1)에서의 iterative policy evaluation을 통해 구함
 - policy improvement : generate $\pi ' \ge \pi$ by greedy policy improvement
-  - $\pi'(s) = \argmax_{a \in A}{q_\pi(s,a)}$
+  - $\pi'(s) = arg\max_{a \in A}{q_\pi(s,a)}$
   - 모든 state s에 대해서 
-    - $q_\pi(s, \pi'(s)) = \max_{a \in A}{q_\pi(s,a)} = v_{\pi'}(s)$
-    - 즉 $v_{\pi'}(s) \ge v_\pi(s)$로 improve 할 수 있다.
+    - $q_\pi(s, \pi '(s)) = \max_{a \in A}{q_\pi(s,a)} = v_{\pi '}(s)$
+    - 즉 $v_{\pi '}(s) \ge v_\pi(s)$로 improve 할 수 있다.
 ### 3) Value iteration
 $v_{k+1}(s) = \max_{a \in A}{R_s^a + \gamma \sum_{s' \in S}{p(s'|s,a)v_k(s')}}$
 
 ## 3. Model-free prediction
-**Dynamic programming** 에서는 state transition probability p(s'|s,a)를 알아야 문제를 해결할 수 있지만 대부분의 MDP에서 state transition에 대한 정보를 완벽하게 알기가 어렵다.  
-따라서 p(s'|s,a)를 모르더라도 문제를 해결할 수 있는 model-free의 방법이 유용하다.
+**Dynamic programming** 에서는 state transition probability $p(s'|s,a)$ 를 알아야 문제를 해결할 수 있지만 대부분의 MDP에서 state transition에 대한 정보를 완벽하게 알기가 어렵다.  
+따라서 $p(s'|s,a)$ 를 모르더라도 문제를 해결할 수 있는 model-free의 방법이 유용하다.
