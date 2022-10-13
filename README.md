@@ -78,7 +78,9 @@ Episodic task에만 적용 가능하다. (전체 return을 사용해서 update�
   - $v_{\pi}(s_t) = \lim_{N\to \infty}\frac{1}{N}\sum_{t}{G_t}$
   - 대수의 법칙을 이용하여 mean return으로 return의 기댓값인 value function을 표현할 수 있다.
   - Incremental mean (running mean)
+
     - $\mu_k = \frac{1}{k} \displaystyle\sum_{j=1}^{k}{x_j} = \frac{1}{k}(x_k + \displaystyle\sum_{j=1}^{k-1}{x_j})$     
+
     $\mu_k = \mu_{k-1}+\frac{1}{k}{x_k-\mu_{k-1}}$
     - $v(s_t) \gets v(s_t)+\frac{1}{N(s_t)}(G_t-v(s_t))$ 를 통해서 sampling을 이용한 policy evaluation이 가능하다.
     - $v(s_t) \gets v(s_t)+\alpha(G_t-v(s_t))$ 
@@ -94,3 +96,4 @@ Episode가 완전히 끝나지 않더라도 online으로 $v_\pi$를 evaluation�
   하지만 많은 random한 action, transition, reward가 포함되기 때문에 variance가 높다.
   - 반면 TD target $\delta_t = R_{t+1}+\gamma v(s_{t+1}) - v(s_t)$ 은 $v(s_{t+1})$ 에 bias되고 random한 action , transition, reward가 하나씩만 포함되기 때문에 variance는 작다.
 - TD( $\lambda$ )
+
