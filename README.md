@@ -24,7 +24,7 @@ $(S,A,P,R,\gamma )$의 tuple로 표현할 수 있다.
 * State transition probability : $P_{ss'}^a=p(s'|s,a)$
 * Action is following policy $\pi (a|s)$
 * $R_s^a=E[R_{t+1}|S,A] = \displaystyle\sum_{a}{\pi(a|s)} \displaystyle\sum_{r}{p(r|s,a)r}=\displaystyle\sum_{a} \displaystyle\sum_{r}{p(r,a|s)r}=\displaystyle\sum_{r}{rp(r|s)}$
-* Action value function $q_\pi (s,a)$: MDP에서 state s에 action a를 취한 뒤 이후 policy $\pi$를 따를 때 받을 수 있는 expected return  
+* Action value function $q_\pi (s,a)$: MDP에서 state s에 a7uq2 ction a를 취한 뒤 이후 policy $\pi$를 따를 때 받을 수 있는 expected return  
   * $q(s,a)=E[G_t|S_t=s,A_t=a]$  
   $=E[R_{t+1}+ \gamma q_\pi (S_{t+1},A_{t+1})|S_t=s,A_t=a]$ <= <span style="color:red">Bellman equation </span> for MDP    
   $=R_s^\pi+\gamma \displaystyle\sum_{s' \in S}{p(s'|s,a)}\displaystyle\sum_{a'}{\pi(a'|s')}q_\pi (s',a')$  
@@ -69,4 +69,28 @@ $v_{k+1}(s) = \max_{a \in A}{R_s^a + \gamma \sum_{s' \in S}{p(s'|s,a)v_k(s')}}$
 
 ## 3. Model-free prediction
 **Dynamic programming** 에서는 state transition probability $p(s'|s,a)$ 를 알아야 문제를 해결할 수 있지만 대부분의 MDP에서 state transition에 대한 정보를 완벽하게 알기가 어렵다.  
-따라서 $p(s'|s,a)$ 를 모르더라도 문제를 해결할 수 있는 model-free의 방법이 유용하다.
+따라서 $p(s'|s,a)$ 를 모르더라도 문제를 해결할 수 있는 model-free의 방법이 유용하다.  
+Bootstrapping : 추정값(value function)을 사용하여 update하는 것  
+Sampling : 기댓값을 update하기 위해 sample을 사용하는 것
+### 1) Monte-Carlo 
+Episodic task에만 적용 가능하다. (전체 return을 사용해서 update하기 때문)
+- Monte-Carlo Policy Evaluation
+  - $v_{\pi}(s_t) = \lim_{N\to \infty}\frac{1}{N}\sum_{t}{G_t}$
+  - 대수의 법칙을 이용하여 mean return으로 return의 기댓값인 value function을 표현할 수 있다.
+  - Incremental mean (running mean)
+    - $\mu_k = \frac{1}{k} \displaystyle\sum_{j=1}^{k}{x_j} = \frac{1}{k}(x_k + \displaystyle\sum_{j=1}^{k-1}{x_j})$     
+    $\mu_k = \mu_{k-1}+\frac{1}{k}{x_k-\mu_{k-1}}$
+    - $v(s_t) \gets v(s_t)+\frac{1}{N(s_t)}(G_t-v(s_t))$ 를 통해서 sampling을 이용한 policy evaluation이 가능하다.
+    - $v(s_t) \gets v(s_t)+\alpha(G_t-v(s_t))$ 
+### 2) Temporal-Difference Learning
+TD methods를 통해서는 episode 전체를 수행하지 않아도 update를 진행할 수 있다.  
+Episode가 완전히 끝나지 않더라도 online으로 $v_\pi$를 evaluation할 수 있다.
+- TD(0)
+  - $v(s_t) \gets v(s_{t})+\alpha(R_{t+1}+\gamma v(s_{t+1})-v(s_t))$
+  - TD target = $R_{t+1} + \gamma v(s_{t+1})$
+  - TD error : $\delta_t = R_{t+1}+\gamma v(s_{t+1}) - v(s_t)$ 
+- Bias/Variance
+  - Return $G_t$ 를 구성하는 값들은 $v_\pi (s_t)$와는 관련이 없기 때문에 이에 biased되지 않는다.  
+  하지만 많은 random한 action, transition, reward가 포함되기 때문에 variance가 높다.
+  - 반면 TD target $\delta_t = R_{t+1}+\gamma v(s_{t+1}) - v(s_t)$ 은 $v(s_{t+1})$ 에 bias되고 random한 action , transition, reward가 하나씩만 포함되기 때문에 variance는 작다.
+- TD( $\lambda$ )
