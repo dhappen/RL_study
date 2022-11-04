@@ -2,7 +2,7 @@
 
 ## 1. Markov Decision Process
 
-**Markov property : *"The future is independent of the past given the present"***
+**Markov property : *"The one step future is only dependent on the present"***
 
 $P[S_{t+1}| S_t] = P[S_{t+1} | S_1, ..., S_t]$
 
@@ -51,7 +51,7 @@ Dynamic programming : 복잡한 문제를 푸는 최적화 기법으로 다음 �
     - input : MDP tuple ( $S, A, P, R, \gamma$ )  
     - output : optimal value function $v_{\pi}$ or optimal policy $\pi$
 ### 1) Iterative policy evaluation
-Problem : given policy $\pi$ 로 예측되는 $v_{\pi}$를 만드는 것  
+Problem : given policy $\pi $ 로 예측되는 $v_{\pi} $를 만드는 것  
 - $v_{k+1}(s) = \sum_{a \in A}{\pi(a|s)}(R_s^a+\gamma \sum_{s' \in S}{p(s'|s,a)v_k(s')})$
 - k번째 iteration의 state value $v_k(s')$로 $v_{k+1}(s)$를 구할 수 있다.
 - Iteration을 통해 given policy $\pi$에 수렴하는 $v_{\pi}$를 구할 수 있다.
@@ -95,5 +95,50 @@ Episode가 완전히 끝나지 않더라도 online으로 $v_\pi$를 evaluation�
   - Return $G_t$ 를 구성하는 값들은 $v_\pi (s_t)$와는 관련이 없기 때문에 이에 biased되지 않는다.  
   하지만 많은 random한 action, transition, reward가 포함되기 때문에 variance가 높다.
   - 반면 TD target $\delta_t = R_{t+1}+\gamma v(s_{t+1}) - v(s_t)$ 은 $v(s_{t+1})$ 에 bias되고 random한 action , transition, reward가 하나씩만 포함되기 때문에 variance는 작다.
-- TD( $\lambda$ )
+- TD$( \lambda )$
+  - n-step return
+    - $n = 1$ 일 때 $G_t^{(1)}=R_{t+1}+\gamma v(s_{t+1})$
+    - $n = 2$ 일 때 $G_t^{(2)}=R_{t+1}+\gamma R_{t+2}+ \gamma ^2v(s_{t+2})$
+    - $G_t^{(n)} = R_{t+1}+\gamma R_{t+2}+ ... + \gamma ^n v(s_{t+n})$
+  - n-step TD learning
+    - $v(s_t) \gets v(s_t) + \alpha(G_t^{(n)} - v(s_t))$
+  - Forward view of TD$( \lambda )$
+    -  n-step return $G_t^{(n)}$ 을 weight $(1- \lambda )\lambda^{n-1}$로 combine하여 표현
+    -  $G_t^{\lambda} = (1-\lambda) \displaystyle\sum_{n=1}^{\infty}{\lambda^{n-1}G_t^{(n)}}$
+    -  TD$(1)$은 terminal state가 있는 경우 MC와 같다.
 
+## 4. Model-free control
+앞선 3. 에서는 model-free 에서 prediction을 하는 것 즉 policy $\pi$를 따르는 value function을 찾는 과정이었다. 기존의 policy iteration은 최적의 policy를 찾지만 model-based의 방법으로 transition probability가 필요한 과정이었다.  
+Sampling을 통해 model-free 상황에서 최적의 policy를 찾아나가는 과정이 model-free control이다.
+
+### 1) Introduction
+- On and off policy learning
+  - On policy
+    - Learn about policy $\pi$ from experience sampled from  $\pi$
+    - $\pi$를 통해 sample 된 trajectory로 $\pi$를 update하는 method
+  - Off policy
+    - Learn about policy $\pi$ from experience sampled from $\mu$
+- $\epsilon$-Greedy exploration
+  - Greedy 하게만 policy를 update하면 bias가 심하고 local minima에 빠질 수 있다.
+  - $1 - \epsilon$ 의 확률로 greedy action을 택하고 $\epsilon$의 확률로 random action을 택하는 policy 이다. 
+  - $\pi (a|s) = \begin{cases} \frac{\epsilon}{m}+1 - \epsilon, &
+   \textrm{if}\;  a^*=\textrm{arg}\max_{a \in A}{Q(s,a)} \\ 
+   \frac{\epsilon}{m}, & 
+   \textrm{otherwise} \end{cases}$  
+  - $\epsilon$-Greedy policy improvement theorem
+    - For any $\epsilon$-greedy policy $\pi$, the $\epsilon$-greedy policy $\pi$' with respect to $q_\pi$ is improvement,  
+    $v_{\pi'}(s) \geq v_{\pi}(s)$  
+### 2) Monte-carlo control 
+- Policy evaluation $\to$ MC policy evaluation, $q(s_t,a_t) \gets v(s_t,a_t)+\alpha(G_t-v(s_t,a_t))$ 
+- Policy improvement $\to$ $\epsilon$-greedy policy improvement  
+$\epsilon \gets \frac{1}{k}$, $\pi \gets \epsilon \textrm{-greedy}(Q)$
+- $\epsilon$-Greedy policy improvement theorem을 통해 policy에 randomness가 추가되더라도 optimal로 수렴하더라
+
+### 3) On policy Temporal-difference(TD) learning
+- Policy evaluation $\to$ Sarsa, $Q \approx q_\pi$
+  - Sarsa : $Q(s,a) \gets Q(s,a) + \alpha (R+\gamma Q(s',a') - Q(s,a))$
+- Policy iteration $\to$ $\epsilon$-greedy policy improvement
+### 4) Off-policy control with Q-learning
+- Policy evaluation : $Q(s,a) \gets Q(s,a) + \alpha (R+\gamma \max_a{Q(s',a)} - Q(s,a))$
+- Behavior policy 는 $\epsilon$-greedy policy 지만 target policy는 Q에 대해 greedy한 policy이다.
+- $\pi(s_{t+1}) = \textrm{arg}\max_{a'}{Q(s_{t+1},a')}$ : target policy
