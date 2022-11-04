@@ -51,13 +51,13 @@ Dynamic programming : 복잡한 문제를 푸는 최적화 기법으로 다음 �
     - input : MDP tuple ( $S, A, P, R, \gamma$ )  
     - output : optimal value function $v_{\pi}$ or optimal policy $\pi$
 ### 1) Iterative policy evaluation
-Problem : given policy $\pi $ 로 예측되는 $v_{\pi} $를 만드는 것  
+Problem : given policy $\pi$ 로 예측되는 $v_{\pi}$를 만드는 것  
 - $v_{k+1}(s) = \sum_{a \in A}{\pi(a|s)}(R_s^a+\gamma \sum_{s' \in S}{p(s'|s,a)v_k(s')})$
 - k번째 iteration의 state value $v_k(s')$로 $v_{k+1}(s)$를 구할 수 있다.
 - Iteration을 통해 given policy $\pi$에 수렴하는 $v_{\pi}$를 구할 수 있다.
 ### 2) Policy iteration
 Policy evaluation과 greedy action을 통해 policy를 improve하는 과정을 반복하면  
-optimal policy $\pi^{*}$와 optimal value function $v^{*}$를 구할 수 있다.
+optimal policy $\pi^{ * }$와 optimal value function $v^{ * }$를 구할 수 있다.
 - policy evaluation : 1)에서의 iterative policy evaluation을 통해 구함
 - policy improvement : generate $\pi ' \ge \pi$ by greedy policy improvement
   - $\pi'(s) = arg\max_{a \in A}{q_\pi(s,a)}$
