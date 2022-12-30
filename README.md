@@ -95,17 +95,17 @@ Episode가 완전히 끝나지 않더라도 online으로 $v_\pi$를 evaluation�
   - Return $G_t$ 를 구성하는 값들은 $v_\pi (s_t)$와는 관련이 없기 때문에 이에 biased되지 않는다.  
   하지만 많은 random한 action, transition, reward가 포함되기 때문에 variance가 높다.
   - 반면 TD target $\delta_t = R_{t+1}+\gamma v(s_{t+1}) - v(s_t)$ 은 $v(s_{t+1})$ 에 bias되고 random한 action , transition, reward가 하나씩만 포함되기 때문에 variance는 작다.
-- TD($\lambda$)
+- TD$( \lambda )$ 
   - n-step return
     - $n = 1$ 일 때 $G_t^{(1)}=R_{t+1}+\gamma v(s_{t+1})$
     - $n = 2$ 일 때 $G_t^{(2)}=R_{t+1}+\gamma R_{t+2}+ \gamma ^2v(s_{t+2})$
     - $G_t^{(n)} = R_{t+1}+\gamma R_{t+2}+ ... + \gamma ^n v(s_{t+n})$
   - n-step TD learning
     - $v(s_t) \gets v(s_t) + \alpha(G_t^{(n)} - v(s_t))$
-  - Forward view of TD($\lambda$)
+  - Forward view of TD$( \lambda )$ 
     -  n-step return $G_t^{(n)}$ 을 weight $(1- \lambda )\lambda^{n-1}$로 combine하여 표현
     -  $G_t^{\lambda} = (1-\lambda) \displaystyle\sum_{n=1}^{\infty}{\lambda^{n-1}G_t^{(n)}}$
-    -  TD$(1)$ 은 terminal state가 있는 경우 MC와 같다.
+    -  TD$( 1 )$ 은 terminal state가 있는 경우 MC와 같다.
 
 ## 4. Model-free control
 앞선 3. 에서는 model-free 에서 prediction을 하는 것 즉 policy $\pi$를 따르는 value function을 찾는 과정이었다. 기존의 policy iteration은 최적의 policy를 찾지만 model-based의 방법으로 transition probability가 필요한 과정이었다.  
@@ -121,7 +121,7 @@ Sampling을 통해 model-free 상황에서 최적의 policy를 찾아나가는 �
 - $\epsilon$-Greedy exploration
   - Greedy 하게만 policy를 update하면 bias가 심하고 local minima에 빠질 수 있다.
   - $1 - \epsilon$ 의 확률로 greedy action을 택하고 $\epsilon$의 확률로 random action을 택하는 policy 이다. 
-  - $x = \begin{cases} \frac{\epsilon}{m} + 1 - \epsilon, & \textrm{if } a^*=argmax_{a \in A}{Q(s,a)} \\ \frac{\epsilon}{m}, & \textrm{otherwise} \end{cases}$  
+  - ![equation](figure/4_1_equation.png)
   - $\epsilon$-Greedy policy improvement theorem
     - For any $\epsilon$-greedy policy $\pi$, the $\epsilon$-greedy policy $\pi$' with respect to $q_\pi$ is improvement,  
     $v_{\pi'}(s) \geq v_{\pi}(s)$  
